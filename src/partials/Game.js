@@ -1,16 +1,21 @@
-import {SVG_NS, PADDLE_WIDTH, PADDLE_HEIGHT, BOARD_GAP, KEYS, RADIUS} from '../settings';
+import {SVG_NS, PADDLE_WIDTH, PADDLE_HEIGHT, BOARD_GAP, KEYS, RADIUS, SPEED} from '../settings';
 import Board from './Board';
 import Paddle from './Paddle';
 import Ball from './Ball';
 import Score from './Score';
-import { setMaxListeners } from 'cluster';
+import audioFileEnd from '../../public/sounds/pong-05.wav';
+import audioFileGame from '../../public/sounds/pong-07.mp3';
 
 export default class Game {
   constructor(element, width, height) {
     this.element = element;
     this.width = width;
     this.height = height;
+    this.pingGame = new Audio(audioFileGame);
+    this.pingEnd = new Audio(audioFileEnd);
     this.paused = false;
+    this.ballArr = [];
+    this.paddleShrunk = false;
 
     this.gameElement = document.getElementById(this.element);
     this.board = new Board(this.width, this.height);
@@ -24,18 +29,49 @@ export default class Game {
     this.score1 = new Score(this.width / 2 - 50, 30);
     this.score2 = new Score(this.width / 2 + 25, 30);
     document.addEventListener('keydown', (event) => {
-      if(event.key === KEYS.pause) {
+      if(event.key === KEYS.pause) { 
         this.paused = !this.paused;
+        this.paddle1.setSpeed(SPEED);
+        this.paddle2.setSpeed(SPEED);
+        this.pingGame.pause();
       } 
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if(event.key === KEYS.reload) {
+        window.location.reload(true);
+      }
+      if(event.key === KEYS.addBall) {
+          this.ballArr.push(new Ball(this.width, this.height, RADIUS))
+        }
     });
   }
 
-  render() {
+  endGame() {
+    if(this.paddle1.score === 10) {
+      this.pingEnd.play();     
+      this.pingGame.pause();
+      this.paused = true;
+      this.gameElement.innerHTML = 'Player 1 wins! Press <span style="color:red">P</span> to play again';
+    } else if (this.paddle2.score === 10) {
+      this.pingEnd.play();     
+      this.pingGame.pause();
+      this.paused = true;
+      this.gameElement.innerHTML = `PLayer 2 wins! Press <span style="color:red">P</span> to play again`;
+    } 
+  }
+
+
+    render() {
+
     if(this.paused) {
+      this.paddle1.setSpeed(0);
+      this.paddle2.setSpeed(0);
       return;
     }
 
     this.gameElement.innerHTML = '';
+    this.pingGame.play();
     let svg = document.createElementNS(SVG_NS, 'svg');
     svg.setAttributeNS(null, 'width', this.width);
     svg.setAttributeNS(null, 'height', this.height);
@@ -44,9 +80,12 @@ export default class Game {
     this.board.render(svg);
     this.paddle1.render(svg);
     this.paddle2.render(svg);
-    this.ball.render(svg, this.paddle1, this.paddle2);
-    this.score1.render(svg, this.paddle1.getScore());
-    this.score2.render(svg, this.paddle2.getScore());
+    this.ball.render(svg, this.paddle1, this.paddle2);      
+    this.score1.render(svg, this.paddle1.getScore(), this.endGame());
+    this.score2.render(svg, this.paddle2.getScore(), this.endGame());
+    this.ballArr.forEach((ball) => {
+      return ball.render(svg,this.paddle1, this.paddle2);
+    }); 
 
   }
 }

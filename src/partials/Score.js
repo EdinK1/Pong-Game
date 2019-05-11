@@ -4,7 +4,7 @@ export default class Score {
   constructor(xPosition, yPosition) {
     this.x = xPosition;
     this.y = yPosition;
-    }
+}
     render(svg, score) {
         let text = document.createElementNS(SVG_NS, 'text');
         text.setAttributeNS(null, 'fill', '#fff');
@@ -13,6 +13,6 @@ export default class Score {
         text.setAttributeNS(null, 'x', this.x);
         text.setAttributeNS(null, 'y', this.y);
         text.textContent = score;
-        svg.appendChild(text);
+        svg.appendChild(text);   
     }
 }

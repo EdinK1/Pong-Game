@@ -1,4 +1,6 @@
-import {SVG_NS} from '../settings';
+import {SVG_NS, KEYS} from '../settings';
+import audioFile from '../../public/sounds/pong-01.wav';
+import audioFileGoal from '../../public/sounds/pong-06.wav';
 
 export default class Ball {
   constructor(boardWidth, boardHeight, radius) {
@@ -6,8 +8,10 @@ export default class Ball {
     this.boardHeight = boardHeight;
     this.radius = radius;
     this.direction = 1;
+    this.ping = new Audio(audioFile);
+    this.goal = new Audio(audioFileGoal);
     this.reset();
-    }
+}
 
     reset() {
         this.x = this.boardWidth / 2;
@@ -32,10 +36,12 @@ export default class Ball {
         if(this.x <= 0) {
             player2.increaseScore();
             this.direction = this.direction * - 1;
+            this.goal.play();
             this.reset();
         } else if (this.x >= this.boardWidth){
             player1.increaseScore();
             this.direction = this.direction * - 1;
+            this.goal.play();            
             this.reset();
         }
     }
@@ -45,17 +51,21 @@ export default class Ball {
             const p2 = player2.getCoordinates();
 
             if (this.x + this.radius >= p2.left && 
+                this.x + this.radius <= p2.right &&
                 this.y >= p2.top &&
                 this.y <= p2.bottom) {
                 this.vx = this.vx * - 1;
+                this.ping.play();
             }
         } else {
             const p1 = player1.getCoordinates();
 
             if (this.x - this.radius <=  p1.right &&
+                this.x - this.radius >= p1.left &&
                 this.y >= p1.top &&
                 this.y <= p1.bottom) {
                 this.vx = this.vx * - 1;
+                this.ping.play();
         }
     }
 }

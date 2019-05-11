@@ -4,12 +4,15 @@ export const PADDLE_WIDTH = 8,
              BOARD_GAP = 10,
              SPEED = 10,
              RADIUS = 8,
-             TEXT_SIZE = 30;
+             TEXT_SIZE = 30,
+             WINNER = 20;
              
 export const KEYS = {
     p1up: 'w',
     p1down: 's',
     p2up: 'ArrowUp',
     p2down: 'ArrowDown',
+    reload: 'p',
+    addBall: 'a',
     pause: ' '
 }; 

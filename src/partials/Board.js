@@ -1,9 +1,10 @@
 import {SVG_NS} from '../settings';
 
 export default class Board {
-  constructor(width, height) {
+  constructor(width, height, fill) {
     this.width = width;
     this.height = height;
+    this.fill = fill;
     }
     render(svg) {
         let rect = document.createElementNS(SVG_NS, 'rect');
