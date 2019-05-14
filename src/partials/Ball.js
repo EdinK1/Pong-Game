@@ -10,6 +10,7 @@ export default class Ball {
     this.direction = 1;
     this.ping = new Audio(audioFile);
     this.goal = new Audio(audioFileGoal);
+    this.getRandomColor();
     this.reset();
 }
 
@@ -45,6 +46,16 @@ export default class Ball {
             this.reset();
         }
     }
+    
+    getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
+         
 
     paddleCollision(player1, player2) {
         if (this.vx > 0) {
@@ -72,12 +83,12 @@ export default class Ball {
 
     render(svg, player1, player2) {
         let circle = document.createElementNS(SVG_NS, 'circle');
-        circle.setAttributeNS(null, 'fill', '#fff');
+        circle.setAttributeNS(null, 'fill', this.getRandomColor());
         circle.setAttributeNS(null, 'cx', this.x);
         circle.setAttributeNS(null, 'cy', this.y);
         circle.setAttributeNS(null, 'r', this.radius);
         this.x = this.x + this.vx;
-        this.y = this.y + this.vy;
+        this.y = this.y + this.vy; 
         this.wallCollision();
         this.goalCollision(player1, player2);
         this.paddleCollision(player1, player2);

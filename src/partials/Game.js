@@ -5,6 +5,7 @@ import Ball from './Ball';
 import Score from './Score';
 import audioFileEnd from '../../public/sounds/pong-05.wav';
 import audioFileGame from '../../public/sounds/pong-07.mp3';
+import audioBullets from '../../public/sounds/pong-08.wav';
 
 export default class Game {
   constructor(element, width, height) {
@@ -13,9 +14,9 @@ export default class Game {
     this.height = height;
     this.pingGame = new Audio(audioFileGame);
     this.pingEnd = new Audio(audioFileEnd);
+    this.audioBullets = new Audio(audioBullets);
     this.paused = false;
     this.ballArr = [];
-    this.paddleShrunk = false;
 
     this.gameElement = document.getElementById(this.element);
     this.board = new Board(this.width, this.height);
@@ -41,23 +42,28 @@ export default class Game {
       if(event.key === KEYS.reload) {
         window.location.reload(true);
       }
-      if(event.key === KEYS.addBall) {
-          this.ballArr.push(new Ball(this.width, this.height, RADIUS))
+      if(event.key === KEYS.addBall && this.paused === false) {
+          this.ballArr.push(new Ball(this.width, this.height, RADIUS));
         }
     });
-  }
-
+}
   endGame() {
+    const h3 = document.querySelectorAll('h3');
+    
     if(this.paddle1.score === 10) {
       this.pingEnd.play();     
       this.pingGame.pause();
       this.paused = true;
-      this.gameElement.innerHTML = 'Player 1 wins! Press <span style="color:red">P</span> to play again';
+      h3[0].setAttribute('style', 'display: none');
+      h3[1].setAttribute('style', 'display: none');
+      this.gameElement.innerHTML = 'Player 1 wins! Press <span class="text-red">P</span> to play again';
     } else if (this.paddle2.score === 10) {
       this.pingEnd.play();     
       this.pingGame.pause();
       this.paused = true;
-      this.gameElement.innerHTML = `PLayer 2 wins! Press <span style="color:red">P</span> to play again`;
+      h3[0].setAttribute('style', 'display: none');
+      h3[1].setAttribute('style', 'display: none');
+      this.gameElement.innerHTML = 'PLayer 2 wins! Press <span class="text-red">P</span> to play again';
     } 
   }
 
@@ -86,7 +92,6 @@ export default class Game {
     this.ballArr.forEach((ball) => {
       return ball.render(svg,this.paddle1, this.paddle2);
     }); 
-
   }
 }
 

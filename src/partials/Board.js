@@ -6,6 +6,7 @@ export default class Board {
     this.height = height;
     this.fill = fill;
     }
+
     render(svg) {
         let rect = document.createElementNS(SVG_NS, 'rect');
         rect.setAttributeNS(null, 'width', this.width);

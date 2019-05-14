@@ -5,8 +5,7 @@ export const PADDLE_WIDTH = 8,
              SPEED = 10,
              RADIUS = 8,
              TEXT_SIZE = 30,
-             WINNER = 20;
-             
+             WINNER = 20;             
 export const KEYS = {
     p1up: 'w',
     p1down: 's',
