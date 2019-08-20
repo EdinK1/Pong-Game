@@ -8,7 +8,6 @@
 3. Node
 4. Npm
 5. Parcel
-5. Webpack 
 6. Git & Github
 
 # Installation instructions
